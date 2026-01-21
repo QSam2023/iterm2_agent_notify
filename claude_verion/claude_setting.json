@@ -1,0 +1,47 @@
+{
+  "permissions": {
+    "defaultMode": "default"
+  },
+  "hooks": {
+    "Stop": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/scripts/iterm2_notify.sh 'Stop' '✅ 任务完成\nClaude Code 任务完成' 'Claude Finish' 1",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "Notification": [
+      {
+        "matcher": "permission_prompt|idle_prompt",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/scripts/iterm2_notify.sh 'Input' '🔔 需要您的输入\nClaude 正在等待您的响应，请回到终端' 'Claude Waiting' 0",
+            "timeout": 15
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if [ \"$CLAUDE_TOOL_EXIT_CODE\" != \"0\" ] 2>/dev/null && [ -n \"$CLAUDE_TOOL_EXIT_CODE\" ]; then ~/.claude/scripts/iterm2_notify.sh 'Error' '❌ 命令执行失败 \"退出码: $CLAUDE_TOOL_EXIT_CODE\"' 'Claude Stop' 0; fi",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  },
+  "enabledPlugins": {
+    "hookify@claude-plugins-official": true
+  },
+  "model": "sonnet"
+}
